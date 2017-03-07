@@ -18,14 +18,16 @@ int sudoku[9][9] = {
 	{6,5,3,1,2,8,7,9,4},
 	{1,7,4,3,5,9,6,8,2},
 	{9,2,8,4,6,7,5,3,1},
-	{2,8,6,5,1,4,3,7,9},
+	{2,8,6,5,1,1,3,7,9},
 	{3,9,1,7,8,2,4,5,6},
 	{5,4,7,6,9,3,2,1,8},
 	{8,6,5,2,3,1,9,4,7},
 	{4,1,2,9,7,5,8,6,3},
 	{7,3,9,8,4,6,1,2,5}};
 
-int result[27];
+int row[9];
+int col[9];
+int square[9];
 
 void* checkSudokuRow(void* param){
 	int sum = 0;
@@ -35,11 +37,9 @@ void* checkSudokuRow(void* param){
 		sum += sudoku[grid->row][i];
 	}
 
-	if(sum!=45){
-		printf("duplicates in row %d!\n", grid->worker);
-	}else{
-		printf("Sum %d\n", sum);
-	}
+	if(sum!=45)
+		row[grid->worker] = 1;
+	else row[grid->worker] = 0;
 
 	pthread_exit(0);
 }
@@ -52,11 +52,9 @@ void* checkSudokuCol(void* param){
 		sum += sudoku[i][grid->column];
 	}
 
-	if(sum!=45){
-		printf("duplicates in col %d!\n", (grid->worker)-9);
-	}else{
-		printf("Sum %d\n", sum);
-	}
+	if(sum!=45)
+		col[grid->worker] = 1;
+	else col[grid->worker] = 0;
 
 	pthread_exit(0);
 }
@@ -71,11 +69,9 @@ void* checkSudokuGrid(void* param){
 		}
 	}
 
-	if(sum!=45){
-		printf("duplicates in grid %d!\n", grid->worker);
-	}else{
-		printf("sum %d\n", sum);
-	}
+	if(sum!=45)
+		square[grid->worker] = 1;
+	else square[grid->worker] = 0;
 
 	pthread_exit(0);
 }
@@ -95,10 +91,10 @@ int main(int argc, char** argv){
 
 	for(int i = 0; i < 9; i++)
 		pthread_join(tid[i], NULL);
-	printf("done checking row");
+	printf("done checking row\n");
 
 	for(int i = 0; i < 9; i++){
-		params[i].worker = 9 + i;
+		params[i].worker = i;
 		params[i].column = i;
 		pthread_attr_t attr;
 		pthread_attr_init(&attr);
@@ -125,8 +121,12 @@ int main(int argc, char** argv){
 
 	for(int i = 0; i < 9; i++)
 		pthread_join(tid[i], NULL);
-	printf("done checking grid");
+	printf("done checking grid\n");
+
+	for(int i = 0; i < 9; i++){
+		printf("%d %d %d\n", row[i], col[i], square[i]);
+	}
 }
-/*
+
  */
 
