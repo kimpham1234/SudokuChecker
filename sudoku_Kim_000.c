@@ -18,7 +18,7 @@ int sudoku[9][9] = {
 	{9,2,8,4,6,7,5,3,1},
 	{2,8,6,5,1,4,3,7,9},
 	{3,9,1,7,8,2,4,5,6},
-	{5,4,7,7,9,3,2,1,8},
+	{5,4,7,6,9,3,2,1,8},
 	{8,6,5,2,3,1,9,4,7},
 	{4,1,2,9,7,5,8,6,3},
 	{7,3,9,8,4,6,1,2,5}};
@@ -149,10 +149,6 @@ int main(int argc, char** argv){
 		pthread_join(rowId[i], NULL);
 		pthread_join(colId[i], NULL);
 		pthread_join(gridId[i], NULL);
-	}
-
-	for(int i = 0; i < 9; i++){
-		printf("%d %d %d\n", row[i],col[i], square[i]);
 	}
 
 	//check results
